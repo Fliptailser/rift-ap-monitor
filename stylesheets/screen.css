@@ -490,6 +490,7 @@ td {
   padding: 0 .7em;
   border: solid #ece4d8;
   border-width: 0 2px 2px 0;
+  text-align: center;
 }
 
 td:last-child, th:last-child {
