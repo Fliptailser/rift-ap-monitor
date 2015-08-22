@@ -66,38 +66,33 @@
 <p>Below is a table of statistics compiled using Rift matches before and after the AP item changes. Due to advances in table technology, specific tables can be conjured up for a particular champion; normal and ranked games can be included or excluded as well.</p>
 
 <select id="champ-dropdown" onchange='selectionChange();'>
-  <option value="volvo">All Champions</option>
-  <option value="saab">Anivia</option>
-  <option value="mercedes">Cho'Gath</option>
-  <option value="audi">Kog'Maw</option>
+  <option value="all">All Champions</option>
+  <option value="Anivia">Anivia</option>
+  <option value="Cho'gath">Cho'Gath</option>
+  <option value="Kog'maw">Kog'Maw</option>
 </select>
 
-<label><input id="normal-check" type='checkbox' onclick='selectionChange();' checked>Normal</label>
-<label><input id="ranked-check" type='checkbox' onclick='selectionChange();' checked>Ranked</label>
+<input type="radio" id='normal' onchange='selectionChange()' name="matchType" value="normal" checked='true'>Normal
+<input type="radio" id='ranked' onchange='selectionChange()' name="matchType" value="ranked">Ranked
 
 <script>
 	function selectionChange(){
-		var use_normals = document.getElementById("normal-check").checked;
-		var use_ranked = document.getElementById("ranked-check").checked;
-		var champ_index = document.getElementById("champ-dropdown").selectedIndex;
+		var use_normals = document.getElementById("normal").checked;
+		var e = document.getElementById("champ-dropdown");
+		var champ = e.options[e.selectedIndex].value;
+			
 		
-		if (use_normals){
-			if(use_ranked){
-				frames['table-frame'].location.href = 'table_' + champ_index + '_all.html';
-			}else{
-				frames['table-frame'].location.href = 'table_' + champ_index + '_normal.html';
-			}
+		if(use_normals){
+			frames['table-frame'].location.href = 'tables/table_' + champ + '_normal.html';
 		}else{
-			if(use_ranked){
-				frames['table-frame'].location.href = 'table_' + champ_index + '_ranked.html';
-			}else{
-				frames['table-frame'].location.href = 'table_blank.html';
-			}
+			frames['table-frame'].location.href = 'tables/table_' + champ + '_ranked.html';
 		}
+		
+		
 	}
 </script>
 
-<iframe name="table-frame" width="100%" height="750px" src="table_0_all.html"></iframe>
+<iframe name="table-frame" width="100%" height="1400px" src="tables/table_all_normal.html"></iframe>
 <span id="table-space">
 
 </span>
@@ -107,12 +102,7 @@
 <p>Sell Rate: The percentage of champions who sold the item after buying it.</p>
 <p>Average Build Position: The average position of the item in champion builds, where 1 means it was built first and 6 means it was built last.</p>
 <p>For more details about these statistics, please refer to the <a href="about.html">supplementary material</a> for this article.
-<!-- <span>
-	<button type="button" style="float:center;width:20%;display:block;margin-left:auto;margin-right:auto;">^</button>
-	<img src="item_pics/NLR.png" alt="Needlessly Large Rod" style="float:center;width:20%;height:20%;display:block;margin-left:auto;margin-right:auto;">
-	<button type="button" style="float:center;width:20%;display:block;margin-left:auto;margin-right:auto;">V</button>
-</span>
-<p style="text-align:center">Needlessly Large Rod</p> -->
+
 
 <h3>
 <a id="static-stats" class="anchor" href="#static-stats" aria-hidden="true"><span class="octicon octicon-link"></span></a>Notable Trends</h3>
