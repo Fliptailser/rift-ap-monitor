@@ -52,19 +52,19 @@
 <img src="anivia.png" alt="Anivia" style="width:100%;height:100%;">
 
 <h3>
-<a id="changes-overview" class="anchor" href="#changes-overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Summary of 5.13 Changes</h3>
+<a id="changes-overview" class="anchor" href="#changes-overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>5.13 Changes</h3>
 
 <p>Not long ago, in iteration 5.13 of the Rift, changes were put in place that hoped to make a wider range of magical weapons (Ability Power items) enticing for magic users. The changes centered around the Needlessly Large Rod (NLR), a powerful and expensive component to the AP items that grant the highest amounts of raw magical power.</p>
 <p><img src="item_pics/NLR.png" alt="Needlessly Large Rod" style="width:64px;height:64px;display:block;margin-left:auto;margin-right:auto;"></p>
 <!-- <p>1600 -> 1250 gold. 80 -> 60 Ability Power.</p> -->
-<p>By making the NLR less expensive and reducing its AP bonus, Rift's Iterating Optimization Team (RIOT) hoped to make its high-power upgrades less obligatory; also to this end, other AP items with a focus on utility and special effects, such as Rylai's Crystal Scepter and Liandry's Torment, had their AP increased.</p>
+<p>By making the NLR less expensive and reducing its AP bonus, Rift's Iterating Optimization Team (RIOT) hoped to make its high-power upgrades less obligatory; also to this end, other AP items with a focus on utility and special effects, such as Rylai's Crystal Scepter and Liandry's Torment, had their AP increased, among other changes.</p>
 
 <h3>
 <a id="player-question" class="anchor" href="#player-question" aria-hidden="true"><span class="octicon octicon-link"></span></a>How Did Champions Adapt?</h3>
 
-<p>Since 5.11, sufficient battles have been waged on the Rift for our champions to adapt to these item alterations. Did mages change the way they build up their power? Which items rose or fell in popularity? Should the Needlessly Large Rod be renamed the Somewhat Unnecessarily Large Rod?
+<p>Since 5.11, sufficient battles have been waged on the Rift for our champions to adapt to these item alterations. Did mages change the way they build up their power? Which items rose or fell in popularity? Should the Needlessly Large Rod be renamed the Somewhat Unnecessarily Large Rod? By looking at some statistics, one can look for changes in item usage and popularity.
 <p>Below is a table of statistics compiled using Rift matches before and after the AP item changes. The first value is the stat for version 5.14, and the second value in parentheses is the difference between 5.11 and 5.14. Due to advances in table technology, specific tables can be conjured up for a particular champion; normal and ranked games can be included or excluded as well.</p>
-<h4>5.14 Statistics</h4>
+<h4>5.14 AP Item Stats Table</h4>
 <select id="champ-dropdown" onchange='selectionChange();'>
   <option value="all">All Champions</option>
   <option value="Aatrox">Aatrox</option>
@@ -221,9 +221,9 @@
 </span>
 
   <p>Pick Rate: The percentage of champions who built the item, from the champions who built any of the above AP items. This is a pick rate in the context of mages: a 50% rate for a champion means that, when they go for AP, the champion picks up the item half the time. This better captures the popularity of AP items relative to each other rather than, say, the popularity of an AP build versus AD.</p>
-<p>Sell Rate: The percentage of champions who sold the item after buying it.</p>
-<p>Mean Build Time: The average time at which champions acquired the item, as measured by the game clock. This is a measure of how quickly items are built in an absolute sense.</p>
-<p>Mean Priority Score: The average priority score of the item, which is a measure between 1 (always built first) and 0 (always built last). This is a measure of how quickly items are built relative to each other. This score is invalid for component items that still upgrade.</p>
+<p>Sell Rate: The percentage of champions who sold the item after buying it. This can be a measure of retention and whether or not champions tend to trade away an item for something else, but it can also be a measure of how circumstantial an item is.</p>
+<p>Mean Build Time: The average time at which champions acquired the item, as measured by the game clock. This is a measure of how quickly items are built in an absolute sense. When items become cheaper or more popular, these times tend to decrease.</p>
+<p>Mean Priority Score: The average priority score of the item, which is a measure between 1 (always built first) and 0 (always built last). This is a measure of how quickly items are built relative to each other; items with high scores tend to be a core part of builds. This score is invalid for component items that still upgrade.</p>
 <p>For more details about how these statistics were gathered, please refer to the <a href="about.html">explanation material</a> for this article.
 
       </section>
