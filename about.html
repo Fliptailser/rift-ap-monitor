@@ -49,6 +49,7 @@
 <a id="about-title" class="anchor" href="#about-title" aria-hidden="true"><span class="octicon octicon-link"></span></a>Methods, Explained</h3>
 
 <p>The Daily Rift will hereby disclose and explain the work that went into its Sept. 1 special edition article. The following is from Fliptailser, the editor.</p>
+<hr>
 <p>First and foremost, this article was made for RIOT's API Challenge 2.0. The Riot API is the system through which software designers can access the plethora of data that has been saved about Rift matches, champion and item data, and so on.
 <p>It's from match data that I collected the data for the article. RIOT provided a dataset of Rift matches: 10,000 match IDs for each of the 10 regions, for both normal and ranked, half from 5.11 and half from 5.14.  In total, there were 400,000 matches. Put another way, there were 4 million champions to analyze in terms of item-building.
 <p>The data collection consisted of three stages: collection, aggregation, and calculation.
@@ -94,7 +95,8 @@ For instance, if an Anivia completes 5 full-build items, where Rod of Ages was b
   <li>Mean Priority Score = (Sum of priority scores for Anivia and this item) / (# of Anivias who built the item).</li>  
 </ul>
 In addition to individual champion stats, the stats for <b>all champions</b> was calculated by adding up the champion counts and then doing the math with those all-champion counts.</p>
-<p>After data calculation, the same script generated HTML tables for each data view that can be pulled up by the article.
+<p>After data calculation, the same script generated HTML tables for each data view that can be pulled up by the article. There are 254 tables: 127 for normal and 127 for ranked (126 champions + all-champions data). Tahm Kench is not present because he wasn't available during 5.11.
+<p>That concludes my write-up. Check out the GitHub repo if you'd like to see the scripts or the various data files. Thanks for reading!
 </section>
 	  <footer>
         <span class="ribbon-outer">
