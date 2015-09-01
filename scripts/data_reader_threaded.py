@@ -1,5 +1,6 @@
 MY_API_KEY = "replace-with-API-key"
 
+# The AP items that were changed with 5.13
 AP_ITEM_NAMES = {"Blasting Wand", "Needlessly Large Rod", "Rabadon's Deathcap", "Zhonya's Hourglass", "Luden's Echo", "Rylai's Crystal Scepter", "Archangel's Staff", "Rod of Ages", "Haunting Guise", "Liandry's Torment", "Void Staff", "Nashor's Tooth", "Will of the Ancients", "Morellonomicon", "Athene's Unholy Grail"}
 ITEM_FINAL_EXCEPTIONS = {"Crystalline Flask":False, "Doran's Ring":False, "Doran's Shield":False, "Doran's Blade":False,
                          "Archangel's Staff":True}
@@ -19,6 +20,7 @@ logging.basicConfig(level=logging.DEBUG,
                     format='[%(levelname)s] (%(threadName)-10s) %(message)s',
                     )
 
+# Item data from the respective version
 print("Getting static item data...")
 response = urllib2.urlopen("https://global.api.pvp.net/api/lol/static-data/na/v1.2/item?version=5.11.1&itemListData=into,from,tags&api_key=" + MY_API_KEY)
 ITEM_DATA_11 = json.loads(response.read())["data"]
@@ -32,13 +34,16 @@ print("Getting static champion data...")
 response = urllib2.urlopen("https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion?dataById=true&api_key=" + MY_API_KEY)
 CHAMP_DATA = json.loads(response.read())["data"]
 
-def getChampName(champId): # (static data) retrieves champion name from ID.
+# (static data) retrieves champion name from ID.
+def getChampName(champId): 
     return CHAMP_DATA[str(champId)]["name"]
 
-def getItemName(itemId, version): # (static data) just like getChampName, except for the version parameter (items in the system seem to vary between versions).
+# (static data) just like getChampName, except for the version parameter (items in the system seem to vary between versions).
+def getItemName(itemId, version):
     return ITEM_DATA[version][str(itemId)]["name"]
 
-def itemIsBootEnchant(itemData, version): # given item API fields, return whether the item is a boot enchantment.
+# given item API fields, return whether the item is a boot enchantment.
+def itemIsBootEnchant(itemData, version): 
     # Each boot enchant builds from a single item: a tier 2 boot.
     # In general, we aren't as interested in things that build from tier 2 boots. In a build order, players fit in tier 2 boots; enchants usually come later.
     if "from" in itemData:
@@ -66,15 +71,6 @@ def itemIsFinalBuild(itemId, version): # (static data) retrieves item data and d
                 return "into" not in itemData and not itemIsBootEnchant(itemData, version) and "Consumable" not in itemData["tags"] and "Trinket" not in itemData["tags"]
         else:
             return "into" not in itemData and not itemIsBootEnchant(itemData, version)
-
-def gameClock(millis): # returns a string in the "12:34" format of the game clock.
-    time_seconds,time_minutes = math.modf(millis / 1000.0 / 60.0)
-    time_seconds = int(math.floor(time_seconds * 60.0))
-    if time_seconds < 10:
-        time_seconds = "0" + str(time_seconds)
-    else:
-        time_seconds = str(time_seconds)
-    return str(int(time_minutes)) + ":" + time_seconds
 
 # This script retrieves data from the Riot API and extracts only what is needed for
 # the AP item statistics that we're looking at. This boiled-down information is returned as a json-like object.
