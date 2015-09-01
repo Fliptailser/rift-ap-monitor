@@ -46,14 +46,57 @@
 
       <section id="main_content">
         <h3>
-<a id="about-title" class="anchor" href="#about-title" aria-hidden="true"><span class="octicon octicon-link"></span></a>Our Methods, Explained.</h3>
+<a id="about-title" class="anchor" href="#about-title" aria-hidden="true"><span class="octicon octicon-link"></span></a>Methods, Explained</h3>
 
-<p>In the interest of promoting as openly as possible the discussion of the important subject of item balance on the Rift, the The Daily Rift will hereby disclose and explain the work that went into its Sept. 1 special edition article.</p>
-<p>First and foremost, the The Daily Rift was invited to conduct this analysis by none other than Rift's Iterating Optimization Team (RIOT). The Sept. 1 article, as well as many other recent Rift-data services, were made for RIOT's API Challenge 2.0.
+<p>The Daily Rift will hereby disclose and explain the work that went into its Sept. 1 special edition article. The following is from Fliptailser, the editor.</p>
+<p>First and foremost, this article was made for RIOT's API Challenge 2.0. The Riot API is the system through which software designers can access the plethora of data that has been saved about Rift matches, champion and item data, and so on.
+<p>It's from match data that I collected the data for the article. RIOT provided a dataset of Rift matches: 10,000 match IDs for each of the 10 regions, for both normal and ranked, half from 5.11 and half from 5.14.  In total, there were 400,000 matches. Put another way, there were 4 million champions to analyze in terms of item-building.
+<p>The data collection consisted of three stages: collection, aggregation, and calculation.
 
-      </section>
+<h4>
+<a class="anchor"><span class="octicon octicon-link"></span></a>Data Collection</h4>
+<p>The information pertaining to champions building items is stored in the timeline of a match's data. This timeline holds a series of events in it, some of which are item-bought, item-sold, and item-destroyed events. The events also indicate which player in the match triggered the event, so by using identifier data from the match we can tell which champion bought or sold any of these items.
+<p>My Python script takes the match ID, gets the match data from the API, and then reads all of these timeline events. It counts stats for every champion, over all matches.
+<p>Using Anivia as an example, the script would count the following:
+<ul>
+  <li>The total number of Anivias found.</li>
+  <li>The number of Anivias that built any of the tracked AP items.</li>
+  <li>For each of the tracked AP items:
+	<ul>
+		<li>The number of Anivias that built the item.</li>
+		<li>The number of Anivias that sold the item.</li>
+		<li>The sum of the timestamps for when Anivias built the item.</li>
+		<li>The sum of the priority scores for Anivia and this item.</li>
+	</ul></li>
+</ul>
+The reason for collecting sums and counts is so that the actual statistics can be calculated later, when all of the data has been collected. The priority score is partially an exception, because the priority score for an individual player is calculated here; but the mean priority score for the champion/item overall is still calculated after all the data has been collected and saved.</p>
+<p>The <strong>priority score</strong> is a statistic that I invented which provides a measure of players' tendencies to rush or delay items. Calculating this score required internal tracking of when players build full-build items (items that are built to occupy an item slot for the remainder of the match).
+<ul>
+  <li>If the player built fewer than 6 full-build items, then: Priority Score = 1 - [(The item's build position - 1) / 5].</li>
+  <li>Otherwise, Priority Score = (The item's build position) / (# of full-build items built by the player). </li>
+</ul>
+For instance, if an Anivia completes 5 full-build items, where Rod of Ages was built first and Void Staff was built fourth, Rod of Ages would have a priority score of 1. Void Staff would have a priority score of 0.4.</p>
+<p>The first case accounts for when builds are left unfinished; it assumes that players were intending to buy more items up to the usual 6 full-build items. The second case accounts for when players build more than 6 final items—this is possible thanks to item selling. In either case, the priority score is from 1 to 0, where 1 means they built it before any other final items and 0 means they built it last.
+<p>I included the priority score statistic because I thought it would be a usable indicator of shifts in item usage; the AP item changes would cause some items to be built sooner, and others later perhaps.  Unlike the build time statistic, however, this score is measured against other items in the build, not time. If <i>every</i> item was built sooner, then timings don't indicate that one was built before the other.
+      
+<h4>
+<a class="anchor"><span class="octicon octicon-link"></span></a>Data Aggregation</h4>
+<p>To fully analyze the dataset, 400,000 match API calls must be made.  If each call took 1 second (which is faster than I got), it would take more than 4 days to get all of the data. To solve the problem, data retrieval was done with 40 threads, one thread for each of the 40 data files (10 regions x 2 patches for normals plus 10 regions x 2 patches for ranked). This sped up things considerably, and it's not in excess of production API rate limits (maybe if I had 300 threads, that would be an issue).
+<p>This solution, however, necessitates an intermediate step of aggregation. Each thread saved the data it collected as a json file, so the data aggregation script opens these 40 files and combines their data into another json file. No further match API calls are needed here.
 
-      <footer>
+<h4>
+<a class="anchor"><span class="octicon octicon-link"></span></a>Data Calculation</h4>
+<p>Now that the raw data are where we want them, I wrote a script to read (essentially, to reopen) the data I collected and calculate the following 4 stats (using Anivia as an example again):
+<ul>
+  <li>Item Pick Rate = (# of Anivias who built the item) / (# of Anivias who built any of the tracked AP items).</li>
+  <li>Item Sell Rate = (# of Anivias who sold the item) / (# of Anivias who built the item).</li>
+  <li>Mean Build Time = (Sum of timestamps for when Anivias built the item) / (# of Anivias who built the item), formatted as a clock value.</li>
+  <li>Mean Priority Score = (Sum of priority scores for Anivia and this item) / (# of Anivias who built the item).</li>  
+</ul>
+In addition to individual champion stats, the stats for <b>all champions</b> was calculated by adding up the champion counts and then doing the math with those all-champion counts.</p>
+<p>After data calculation, the same script generated HTML tables for each data view that can be pulled up by the article.
+</section>
+	  <footer>
         <span class="ribbon-outer">
           <span class="ribbon-inner">
             <p>This project by <a href="https://github.com/Fliptailser">Fliptailser</a> can be found on <a href="https://github.com/Fliptailser/rift-ap-monitor">GitHub</a></p>
