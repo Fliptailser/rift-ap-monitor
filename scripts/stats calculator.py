@@ -3,13 +3,18 @@ import json
 import math
 
 def gameClock(millis): # returns a string in the "12:34" format of the game clock.
-    time_seconds,time_minutes = math.modf(millis / 1000.0 / 60.0)
+    negative = millis < 0
+    time_seconds,time_minutes = math.modf(abs(millis) / 1000.0 / 60.0)
     time_seconds = int(math.floor(time_seconds * 60.0))
     if time_seconds < 10:
         time_seconds = "0" + str(time_seconds)
     else:
         time_seconds = str(time_seconds)
-    return str(int(time_minutes)) + ":" + time_seconds
+
+    if negative:
+        return "-" + str(int(time_minutes)) + ":" + time_seconds
+    else:
+        return str(int(time_minutes)) + ":" + time_seconds
 
 
 # counts[version][type][champion][item/champion_stats][item_stats]
@@ -91,10 +96,48 @@ for typeKey in {"normal", "ranked"}:
             
             stream.write("<tr>")
             stream.write("<td class=\"lalign\"><img src=\"item_pics/" + itemKey + ".png\" alt=\"" + itemKey + "\" style=\"width:32px;height:32px;display:block;margin-left:auto;margin-right:auto;\">" + itemKey + "</td>")
-            stream.write("<td>" + '{0:.3}'.format(itemBeforeStats["pickRate"]) + "->" + '{0:.3}'.format(itemAfterStats["pickRate"]) + "</td>")
-            stream.write("<td>" + '{0:.3}'.format(itemBeforeStats["sellRate"]) + "->" + '{0:.3}'.format(itemAfterStats["sellRate"]) + "</td>")
-            stream.write("<td>" + gameClock(itemBeforeStats["buildTime"]) + "->" + gameClock(itemAfterStats["buildTime"]) + "</td>")
-            stream.write("<td>" + '{0:.3}'.format(itemBeforeStats["priorityScore"]) + "->" + '{0:.3}'.format(itemAfterStats["priorityScore"]) + "</td>")
+            # Pick Rate
+            pickAfter = 100*itemAfterStats["pickRate"]
+            pickDiff = pickAfter - 100*itemBeforeStats["pickRate"]
+            if pickDiff > 0:
+                stream.write("<td style='color:green'>" + '{0:.2f}'.format(pickAfter) + "% (+" + '{0:.2f}'.format(pickDiff) + "%)</td>")
+            elif pickDiff < 0:
+                stream.write("<td style='color:red'>" + '{0:.2f}'.format(pickAfter) + "% (" + '{0:.2f}'.format(pickDiff) + "%)</td>")
+            else:
+                stream.write("<td>" + '{0:.2f}'.format(pickAfter) + "% (±0.00%)</td>")
+            # Sell Rate
+            sellAfter = 100*itemAfterStats["sellRate"]
+            sellDiff = sellAfter - 100*itemBeforeStats["sellRate"]
+            if sellDiff < 0:
+                stream.write("<td style='color:green'>" + '{0:.2f}'.format(sellAfter) + "% (" + '{0:.2f}'.format(sellDiff) + "%)</td>")
+            elif sellDiff > 0:
+                stream.write("<td style='color:red'>" + '{0:.2f}'.format(sellAfter) + "% (+" + '{0:.2f}'.format(sellDiff) + "%)</td>")
+            else:
+                stream.write("<td>" + '{0:.2f}'.format(sellAfter) + "% (±0.00%)</td>")
+            
+            # Build Time
+            timeAfter = itemAfterStats["buildTime"]
+            timeDiff = timeAfter - itemBeforeStats["buildTime"]
+            if timeDiff < 0:
+                stream.write("<td style='color:green'>" + gameClock(timeAfter) + " (" + gameClock(timeDiff) + ")</td>")
+            elif timeDiff > 0:
+                stream.write("<td style='color:red'>" + gameClock(timeAfter) + " (+" + gameClock(timeDiff) + ")</td>")
+            else:
+                stream.write("<td>" + gameClock(timeAfter) + " (±0.00)</td>")
+            
+            # Priority Score
+            if itemKey in {"Blasting Wand","Needlessly Large Rod","Haunting Guise"}:
+                stream.write("<td>N/A</td>")
+            else:
+                scoreAfter = itemAfterStats["priorityScore"]
+                scoreDiff = scoreAfter - itemBeforeStats["priorityScore"]
+                if scoreDiff > 0:
+                    stream.write("<td style='color:green'>" + '{0:.2f}'.format(scoreAfter) + " (+" + '{0:.2f}'.format(scoreDiff) + ")</td>")
+                elif scoreDiff < 0:
+                    stream.write("<td style='color:red'>" + '{0:.2f}'.format(scoreAfter) + " (" + '{0:.2f}'.format(scoreDiff) + ")</td>")
+                else:
+                    stream.write("<td>" + '{0:.2f}'.format(scoreAfter) + " (±0.00)</td>")
+            
             stream.write("</tr>")
                 
 
